@@ -72,19 +72,30 @@ if (isset($_POST['add-project'])) {
 		
 
 		if ($saveProject) {
-			$milestone1 = new Milestone();
-			$milestone1->id = null;
-			$milestone1->p_id = Milestone::getLastSavedProjectId();
-			$milestone1->title = "Musadiq";
-			$saveMilestone = $milestone1->save();
-			if ($saveMilestone) {
-				echo "Milestone saved successfully";
-			} else {
-				echo "Failed to save milestone";
-			}
-		} else {
-			echo "Failed to save project";
-		}
+    $lastSavedProjectId = Milestone::getLastSavedProjectId();
+    for ($i = 0; $i < count($_POST['milestoneTitle']); $i++) {
+        $milestone = new Milestone();
+        $milestone->id = null;
+        $milestone->p_id = $lastSavedProjectId;
+        $milestone->title = $_POST['milestoneTitle'][$i];
+        $milestone->deadline = $_POST['startTime_milestone'][$i];
+        $milestone->releaseDate = $_POST['endTime_milestone'][$i];
+        $milestone->budget = $_POST['milestoneBudget'][$i];
+        $saveMilestone = $milestone->save();
+        if (!$saveMilestone) {
+            echo "Failed to save milestone ";
+            break;
+        }
+    }
+    if ($saveMilestone) {
+        echo "Milestones saved successfully";
+    } else {
+        echo "Failed to save milestones";
+    }
+} else {
+    echo "Failed to save project";
+}
+
 
 		$notmessagea = $lang['Project has been created successfully!'];
 		$notmessageb = $lang['Project could not created at this time. Please Try Again Later . Thanks'];
@@ -246,24 +257,24 @@ if (isset($_POST['add-project'])) {
 										<div class="row">
 											<div class='col-2'>
 												<div class="form-group">
-													<input type="text" name="milestoneTitle" class="form-control" placeholder="Milestone Title" required>
+													<input type="text" name="milestoneTitle[]" class="form-control" placeholder="Milestone Title" required>
 												</div>
 
 											</div>
 											<div class='col-2'>
 												<div class="form-group">
-													<input type="text" placeholder="<?php echo $lang['Start Time']; ?>" name="startTime_milestone" class="form-control datepicker" required />
+													<input type="text" placeholder="<?php echo $lang['Start Time']; ?>" name="startTime_milestone[]" class="form-control datepicker" required />
 												</div>
 											</div>
 											<div class='col-2 '>
 												<div class="form-group">
-													<input type="text" placeholder="End Time" name="endTime_milestone" class="form-control datepicker" required />
+													<input type="text" placeholder="End Time" name="endTime_milestone[]" class="form-control datepicker" required />
 
 												</div>
 											</div>
 											<div class='col-2'>
 												<div class="form-group">
-													<input type="text" name="milestoneTitle" class="form-control" placeholder="Milestone budget" required>
+													<input type="text" name="milestoneBudget[]" class="form-control" placeholder="Milestone budget" required>
 												</div>
 
 
@@ -307,7 +318,7 @@ if (isset($_POST['add-project'])) {
 											<div class="form-group">
 												<div class="inline field">
 													<div class="ui toggle checkbox custom-btnc">
-														<input type="checkbox" name="notifyClient" tabindex="0" class="hidden" />
+														<input type="checkbox" name="notifyClient[]" tabindex="0" class="hidden" />
 														<label><?php echo $lang['Email Notification']; ?><br><span><?php echo $lang['Notify to client and staff project has been created']; ?></span></label>
 													</div>
 													<input type="submit" onclick="add_project()" name="add-project" value="<?php echo $lang['add new project']; ?>" class="btn new-btnblue" />
@@ -341,10 +352,10 @@ if (isset($_POST['add-project'])) {
 	document.getElementById('m-add').addEventListener('click', function() {
 
 		// Construct unique IDs for each milestone field
-		const milestoneTitleId = `milestoneTitle_${milestoneCounter}`;
-		const startTimeId = `startTime_${milestoneCounter}`;
-		const endTimeId = `endTime_${milestoneCounter}`;
-		const milestoneBudgetId = `milestoneBudget_${milestoneCounter}`;
+		const milestoneTitleId = `milestoneTitle${milestoneCounter}`;
+		const startTimeId = `startTime${milestoneCounter}`;
+		const endTimeId = `endTime${milestoneCounter}`;
+		const milestoneBudgetId = `milestoneBudget${milestoneCounter}`;
 
 		// Get container element where milestones will be added
 		const addMilestones = document.getElementById('add-inputs');
@@ -359,12 +370,12 @@ if (isset($_POST['add-project'])) {
       </div>
       <div class='col-2'>
         <div class="form-group">
-          <input type="text" placeholder="<?php echo $lang['Start Time']; ?>" id="${startTimeId}" name="startTime[]" class="form-control datepicker" required>
+          <input type="text" placeholder="<?php echo $lang['Start Time']; ?>" id="${startTimeId}" name="startTime_milestone[]" class="form-control datepicker" required>
         </div>
       </div>
       <div class='col-2'>
         <div class="form-group">
-          <input type="text" placeholder="End Time" id="${endTimeId}" name="endTime[]" class="form-control datepicker" required>
+          <input type="text" placeholder="End Time" id="${endTimeId}" name="endTime_milestone[]" class="form-control datepicker" required>
         </div>
       </div>
       <div class='col-2'>
