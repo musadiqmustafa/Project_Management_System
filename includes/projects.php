@@ -5,7 +5,7 @@ require_once('database.php');
 class Projects extends DatabaseObject {
 	
 	protected static $tblName="projects";
-	protected static $tblFields = array('p_id', 'c_id', 's_ids', 'project_title', 'project_desc', 'budget', 'status', 'archive', 'trash', 'start_time','end_time','revisions','file');
+	protected static $tblFields = array('p_id', 'c_id', 's_ids', 'project_title', 'project_desc', 'budget', 'status', 'archive', 'trash', 'start_time','end_time','revisions','file','days');
 	
 	public $p_id;
 	public $c_id;
@@ -20,6 +20,7 @@ class Projects extends DatabaseObject {
 	public $end_time;
 	public $revisions;
 	public $file;
+	public $days;
 	
 	public $message=NULL;
 
