@@ -58,13 +58,14 @@ if (isset($_POST['add-project'])) {
 				$project->file = $uploadFile;
 		
 				// Save project to database
-				$saveProject = $project->save();
+				
 			} else {
 				echo "Error uploading file.";
 			}
 		} else {
 			// No file was uploaded, set file field to null
 			$project->file = "musadiq";}
+            $saveProject = $project->save();
 		
 		
 			// Save
@@ -160,7 +161,9 @@ if (isset($_POST['add-project'])) {
 }
 ?>
 
+
 <div class="page-container">
+    
     <div class="container-fluid">
         <div class="row row-eq-height">
             <?php include("../templates/sidebar.php"); ?>
@@ -173,7 +176,27 @@ if (isset($_POST['add-project'])) {
                         <?php if (isset($message) && (!empty($message))) {
 							echo $message;
 						} ?>
+                   <div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
                         <div class="add-project">
+  
                             <form method="post" action="#" enctype="multipart/form-data">
                                 <div class="row">
                                     <div class="col-md-3">
@@ -199,7 +222,7 @@ if (isset($_POST['add-project'])) {
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <input type="number" name="budget"
+                                                    <input type="number"id="budget" name="budget"
                                                         placeholder="<?php echo $lang['Budget']; ?> <?php echo $currency_symbol . $recentProject->budget; ?>"
                                                         class="form-control" required>
                                                     <input type="hidden" name="status" value="0">
@@ -234,6 +257,7 @@ if (isset($_POST['add-project'])) {
 
 
                                                 </div>
+                                                
 
 
 
@@ -274,56 +298,17 @@ if (isset($_POST['add-project'])) {
                                         </div>
                                         <div class="mb-3">
 
-                                            <input class="form-control" name='formfile' type="file" id="formFile">
+                                            <input  class="form-control" name='formfile' type="file" id="formFile">
 
                                         </div>
                                         <div> Milestones</div>
                                         <br>
-                                        <div class="row">
-                                            <div class='col-2'>
-                                                <div class="form-group">
-                                                    <input type="text" name="milestoneTitle[]" class="form-control"
-                                                        placeholder="Milestone Title" required>
-                                                </div>
-
-                                            </div>
-                                            <div class='col-2'>
-                                                <div class="form-group">
-                                                    <input type="text" placeholder="<?php echo $lang['Start Time']; ?>"
-                                                        name="startTime_milestone[]" class="form-control datepicker"
-                                                        required />
-                                                </div>
-                                            </div>
-                                            <div class='col-2 '>
-                                                <div class="form-group">
-                                                    <input type="text" placeholder="End Time" name="endTime_milestone[]"
-                                                        class="form-control datepicker" required />
-
-                                                </div>
-                                            </div>
-                                            <div class='col-2'>
-                                                <div class="form-group">
-                                                    <input type="text" name="milestoneBudget[]" class="form-control"
-                                                        placeholder="Milestone budget" required>
-                                                </div>
+                                        
+                                        <div class='add-inputs' id='add-inputs'></div>
+                                        
 
 
-
-
-
-                                            </div>
-                                            <div class='col-2'>
-                                                <i id='m-add' style="font-size: 1.5em;margin-top: 17px;"
-                                                    class="fa fa-plus-circle"></i>
-
-
-                                            </div>
-
-                                        </div>
-                                        <div id='add-inputs'></div>
-
-
-                                        <div class="col-md-12">
+                                        <div onclick="ck_milestoneprice()" class="col-md-12">
                                             <div class="form-group">
                                                 <div class="staff-heading">
                                                     <h4><?php echo $lang['Assign staff']; ?></h4>
@@ -331,7 +316,7 @@ if (isset($_POST['add-project'])) {
                                                 </div>
                                                 <input type="hidden" name="staff[]" value="1" />
                                                 <input type="hidden" name="staff[]" class="new_val" />
-                                                <select multiple required class="ui fluid dropdown" name="staff[]">
+                                                <select  multiple required class="ui fluid dropdown" name="staff[]" >
                                                     <option value=""><?php echo $lang['Select Staff members']; ?>
                                                     </option>
                                                     <?php $recentlyRegisteredUsers = user::findBySql("select * from users ORDER BY id DESC");
@@ -386,52 +371,6 @@ $('.custom-btnc').checkbox();
 let milestoneCounter = 1;
 
 // Add event listener to 'm-add' button
-document.getElementById('m-add').addEventListener('click', function() {
-
-    // Construct unique IDs for each milestone field
-    const milestoneTitleId = `milestoneTitle${milestoneCounter}`;
-    const startTimeId = `startTime${milestoneCounter}`;
-    const endTimeId = `endTime${milestoneCounter}`;
-    const milestoneBudgetId = `milestoneBudget${milestoneCounter}`;
-
-    // Get container element where milestones will be added
-    const addMilestones = document.getElementById('add-inputs');
-
-    // Create new milestone element with unique IDs
-    const newMilestone = `
-    <div class="row">
-      <div class='col-2'>
-        <div class="form-group">
-          <input type="text" id="${milestoneTitleId}" name="milestoneTitle[]" class="form-control" placeholder="Milestone Title" required>
-        </div>
-      </div>
-      <div class='col-2'>
-        <div class="form-group">
-          <input type="text" placeholder="<?php echo $lang['Start Time']; ?>" id="${startTimeId}" name="startTime_milestone[]" class="form-control datepicker" required>
-        </div>
-      </div>
-      <div class='col-2'>
-        <div class="form-group">
-          <input type="text" placeholder="End Time" id="${endTimeId}" name="endTime_milestone[]" class="form-control datepicker" required>
-        </div>
-      </div>
-      <div class='col-2'>
-        <div class="form-group">
-          <input type="text" id="${milestoneBudgetId}" name="milestoneBudget[]" class="form-control" placeholder="Milestone budget" required>
-        </div>
-      </div>
-      <div class='col-2'>
-        <i onclick="minus(this)" style="font-size: 1.5em; margin-top: 17px;" class="fa fa-minus-circle"></i>
-      </div>
-    </div>
-  `;
-
-    // Append new milestone element to container
-    addMilestones.innerHTML += newMilestone;
-
-    // Increment milestone counter
-    milestoneCounter++;
-});
 
 
 function minus(btn) {
@@ -490,4 +429,73 @@ function Days() {
 
   console.log(days);
 }
+document.getElementById("milestones_num").addEventListener("change", function(){
+    a=this.value
+    for (let i = 0; i < a; i++) { const milestoneTitleId = `milestoneTitle${milestoneCounter}`;
+    const startTimeId = `startTime${milestoneCounter}`;
+    const endTimeId = `endTime${milestoneCounter}`;
+    const milestoneBudgetId = `milestoneBudget${milestoneCounter}`;
+
+    // Get container element where milestones will be added
+    const addMilestones = document.getElementById('add-inputs');
+
+    // Create new milestone element with unique IDs
+    const newMilestone = `
+    <div class="row">
+      <div class='col-3'>
+        <div class="form-group">
+          <input type="text" id="${milestoneTitleId}" name="milestoneTitle[]" class="form-control" placeholder="Milestone Title" required>
+        </div>
+      </div>
+      <div class='col-3'>
+        <div class="form-group">
+          <input type="date" placeholder="<?php echo $lang['Start Time']; ?>" id="${startTimeId}" name="startTime_milestone[]" class="form-control datepicker" required>
+        </div>
+      </div>
+      <div class='col-3'>
+        <div class="form-group">
+          <input type="date" placeholder="End Time" id="${endTimeId}" name="endTime_milestone[]" class="form-control datepicker" required>
+        </div>
+      </div>
+      <div class='col-2'>
+        <div class="form-group">
+          <input type="text" id="${milestoneBudgetId}" name="milestoneBudget[]" class="form-control" placeholder="Price" required>
+        </div>
+      </div>
+      <div class='col-1'>
+        <i onclick="minus(this)" style="font-size: 1.5em; margin-top: 17px;" class="fa fa-minus-circle"></i>
+      </div>
+    </div>
+  `;
+
+    // Append new milestone element to container
+    addMilestones.innerHTML += newMilestone;
+
+    // Increment milestone counter
+    milestoneCounter++;
+    }
+})
+function ck_milestoneprice(){
+    var sum=0;
+    var milestoneBudgetInputs = document.getElementsByName('milestoneBudget[]');
+    for (var i = 0; i < milestoneBudgetInputs.length; i++) {
+       sum+=parseFloat(milestoneBudgetInputs[i].value);
+    }
+    console.log(sum);
+    var budget=document.getElementById('budget').value;
+    var alertElement = document.querySelector('.alert-danger');
+    if (sum > budget){  
+        alert("Milestone price cannpt be greater than Budget")
+    } else {
+        console.log('ok');
+    }
+}
+
+
+
+
+
+
+
+
 </script>
