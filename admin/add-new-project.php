@@ -144,7 +144,7 @@ if (isset($_POST['add-project'])) {
 
 							if ($emailSent) {
 							} else {
-								// header("Location:projects.php?message=error_email");
+								header("Location:projects.php?message=error_email");
 							}
 						}
 					}
@@ -153,7 +153,7 @@ if (isset($_POST['add-project'])) {
 			} else {
 				$message = "<p class='alert alert-success'><i class='fa fa-check'></i> " . $notmessagea . "</p>";
 			}
-			// header("Location:projects.php?message=created");
+			header("Location:projects.php?message=created");
 		} else {
 			$message = "<p class='alert alert-danger'><i class='fa fa-times'></i> " . $notmessageb . "</p>";
 		}
@@ -485,7 +485,7 @@ function ck_milestoneprice(){
     var budget=document.getElementById('budget').value;
     var alertElement = document.querySelector('.alert-danger');
     if (sum > budget){  
-        alert("Milestone price cannpt be greater than Budget")
+        alert("Milestone price cannot be greater than Budget")
     } else {
         console.log('ok');
     }

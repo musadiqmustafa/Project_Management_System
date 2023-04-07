@@ -6,7 +6,7 @@ require_once('database.php');
 class milestone extends DatabaseObject {
 	
 	protected static $tblName="milestones";
-	protected static $tblFields = array('id', 'p_id', 'title' , 'deadline', 'releaseDate', 'budget', 'status');
+	protected static $tblFields = array('id', 'p_id', 'title' , 'deadline', 'releaseDate', 'budget', 'status', 'completed');
 	
 	public $id;
 	public $p_id;
@@ -15,6 +15,8 @@ class milestone extends DatabaseObject {
 	public $releaseDate;
 	public $budget;
 	public $status;
+	
+	public $completed;
 	
 	 public $message=NULL;
 
@@ -63,6 +65,7 @@ class milestone extends DatabaseObject {
 		$row = $database->fetchArray($result_set);
 		return $row['max_p_id'];
 	}
+	
 	
 	
 }
