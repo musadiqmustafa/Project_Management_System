@@ -428,6 +428,7 @@ $ProjectsLoop =projects::findBySql("select * from projects WHERE p_id= $projectI
                                 	<input type="hidden" value="<?php echo $recentProject->budget;?>" name="edit_id2"/>
                                     <input type="hidden" value="<?php echo $recentProject->id;?>" name="edit_id1"/>
                                     <button type="submit" class="btn outine" name="edit-mile1"> <?php echo $lang['View invoice']; ?></button>
+									
                                 </form></td>
                                 <td class="editmilestone">
                               	<form method="post" action="#">

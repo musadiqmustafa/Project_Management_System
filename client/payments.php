@@ -263,7 +263,9 @@ if($checkout_id != "" && $checkout_pk != ""){ ?>
         <div class="form-group">
         <div class="col-md-12">
 		<input type="submit" class="bigbutton" value="<?php echo $lang['Make Payment']; ?>">
+    <button>Go</button>
 		</div>
+   
 		</div>
     </form>
 	</div>
@@ -311,6 +313,8 @@ if($checkout_id != "" && $checkout_pk != ""){ ?>
 <div class="form-group">
 <div class="col-md-12">
 <input type="submit" id="makePayment" class="bigbutton" value="<?php echo $lang['Make Payment']; ?>">
+
+
 </div>
 </div>
 </form>
@@ -334,8 +338,7 @@ if($checkout_id != "" && $checkout_pk != ""){ ?>
     <input type="hidden" name="currency_code" value="<?php echo $currency;?>"> 
     <input type="hidden" name="lc" value="AU">
     <input type="hidden" name="bn" value="PP-BuyNowBF">
-    <input type="submit" class="bigbutton" name="submit" value="Make payment with Paypal" alt="PayPal - The safer, easier way to pay online.">
-    <img alt="" border="0" src="https://www.paypal.com/en_AU/i/scr/pixel.gif" width="1" height="1">
+  <img alt="" border="0" src="https://www.paypal.com/en_AU/i/scr/pixel.gif" width="1" height="1">
 <input type="hidden" name="return" value="<?php echo $url;?>client/paypal_payment.php?milestone_id=<?php echo $edit_id;?>&projectId=<?php echo $projectId;?>&status=success&clientId=<?php echo $id;?>">
 </form>
 </div>
@@ -425,6 +428,7 @@ if($checkout_id != "" && $checkout_pk != ""){ ?>
                             <th><?php echo $lang['Status']; ?></th>
                             <th><?php echo $lang['Invoice']; ?></th>
                             <th><?php echo $lang['Payment']; ?></th>
+                            <th>Progress</th>
                           </tr>
                         </thead>
                         <tbody id="projects-tbl">
@@ -444,16 +448,27 @@ if($checkout_id != "" && $checkout_pk != ""){ ?>
                                 	<input type="hidden" value="<?php echo $recentProject->budget;?>" name="edit_id2"/>
                                     <input type="hidden" value="<?php echo $recentProject->id;?>" name="edit_id1"/>
                                     <button type="submit" class="btn outine" name="edit-mile1"> <?php echo $lang['View invoice']; ?></button>
+                                    <input type="radio" name="status" value="completed"> Completed
+<input type="radio" name="status" value="uncompleted"> Uncompleted
+
                                 </form></td>
                                 <td class="editmilestone">
                               	<form method="post" action="#">
                                 	<input type="hidden" value="<?php echo $recentProject->id;?>" name="edit_id"/>
 									<?php if($recentProject->status==0){ ?>
                                     <button type="submit" class="btnnewbt btn blue" name="edit-mile"> <?php echo $lang['Make Payment']; ?></button>
+
+                                    
 									<?php } else { ?>
 									<button disabled type="submit" class="btnnewbt btn blue" name="edit-mile"> <?php echo $lang['Payment Done']; ?></button>
 									<?php }?>
                                 </form></td>
+                                <td>
+  <span class="onmobile centera"> </span>
+  <?php echo '<i class="ml-3" onclick="alert(\'hello\');" style="cursor: pointer;"><span style="color: green;">&#10003;</span></i>' . $recentProject->p_id; ?>
+
+</td>
+
                             </tr>
                           
                         <?php 
@@ -523,7 +538,7 @@ if(isset($_POST["edit-mile"])){?>
   };
 
   $(function() {
-    // Pull in the public encryption key for our environment
+    // Pull in the public encryption key for our enewronment
     TCO.loadPubKey('production');
 
     $("#myCCForm").submit(function(e) {
